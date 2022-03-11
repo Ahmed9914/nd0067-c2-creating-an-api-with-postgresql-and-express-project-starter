@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { devClient } from '../database';
+import { client } from '../database';
 
 export type Product = {
     id: number;
@@ -7,8 +7,8 @@ export type Product = {
     price: number;
 };
 
-export class ProductStore {
-    async index(client: Pool = devClient): Promise<Product[]> {
+export class ProductStore {    
+    async index(): Promise<Product[]> {
         try {
             const connection = await client.connect();
             const sql = 'SELECT * FROM products';
