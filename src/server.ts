@@ -6,11 +6,7 @@ import productRoutes from './handlers/productRoutes';
 const app: express.Application = express()
 const port: number = 3000;
 
-const corsOptions = {
-    origin: 'http://google.com' // Assuming google will consume our Api
-}
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get('/', function (_req: Request, res: Response) {
@@ -22,3 +18,5 @@ productRoutes(app);
 app.listen(3000, function () {
     console.log(`server started at http://localhost:${port}`);
 })
+
+export default app;
