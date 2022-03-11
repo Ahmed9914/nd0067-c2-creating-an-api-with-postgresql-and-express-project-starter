@@ -11,16 +11,13 @@ const {
     POSTGRES_PASSWORD
 } = process.env;
 
-export const devClient = new Pool({
-    host: POSTGRES_HOST,
-    database: POSTGRES_DB,
-    user: POSTGRES_USER,
-    password: POSTGRES_PASSWORD
-});
+const PG_DATABASE = process.env.ENV === "test" 
+? POSTGRES_TEST_DB 
+: POSTGRES_DB
 
-export const testClient = new Pool({
+export const client = new Pool({
     host: POSTGRES_HOST,
-    database: POSTGRES_TEST_DB,
+    database: PG_DATABASE,
     user: POSTGRES_USER,
     password: POSTGRES_PASSWORD
 });
