@@ -9,7 +9,7 @@ const index = async (_request: Request, response: Response) => {
 }
 
 const productRoutes = (app: express.Application) => {
-    app.get('/products', index)
+    app.get('/products', index);
 }
 
 export default productRoutes;
