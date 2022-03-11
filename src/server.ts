@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import productRoutes from './handlers/productRoutes';
 
 const app: express.Application = express()
 const port: number = 3000;
@@ -12,9 +13,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
-app.get('/', function (req: Request, res: Response) {
-    res.send('Hello World!')
+app.get('/', function (_req: Request, res: Response) {
+    res.send('Welcome to storefront!');
 })
+
+productRoutes(app);
 
 app.listen(3000, function () {
     console.log(`server started at http://localhost:${port}`);
