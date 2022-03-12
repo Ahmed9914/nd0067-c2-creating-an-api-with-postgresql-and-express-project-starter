@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import productRoutes from './handlers/productRoutes';
+import productRoutes from './handlers/productRouter';
 
 const app: express.Application = express()
 const port: number = 3000;
