@@ -14,18 +14,23 @@ describe("User CRUD operations tests", () => {
         expect((await result).username).toBe('admin');
     });
 
-    it('Should block logging on for wrong entered password',async () => {
-        const result = await userStore.authenticate('admin', 'password');
-        expect(result).toBeNull();
+    describe('Authentication tests', () => {
+        it('Should block logging on for wrong entered password',async () => {
+            const result = await userStore.authenticate('admin', 'password');
+            expect(result).toBeNull();
+        })
+    
+        it('Should block logging on for non existing users',async () => {
+            const result = await userStore.authenticate('adminstrator', '123456');
+            expect(result).toBeNull();
+        })
+    
+        it('Should allow logging on for right entered password',async () => {
+            const result = await userStore.authenticate('admin', '123456');
+            expect(result).toBeTruthy();
+        })
+
     })
 
-    it('Should block logging on for non existing users',async () => {
-        const result = await userStore.authenticate('adminstrator', '123456');
-        expect(result).toBeNull();
-    })
-
-    it('Should allow logging on for right entered password',async () => {
-        const result = await userStore.authenticate('admin', '123456');
-        expect(result).toBeTruthy();
-    })
+    
 });
