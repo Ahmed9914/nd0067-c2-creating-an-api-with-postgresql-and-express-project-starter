@@ -1,8 +1,6 @@
-import { Pool } from 'pg';
 import { client } from '../database';
 
 export type Product = {
-    id: number;
     name: string;
     price: number;
 };
