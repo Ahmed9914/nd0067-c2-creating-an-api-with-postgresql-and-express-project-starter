@@ -19,19 +19,42 @@ export type User = {
 export class UserStore {    
     async create(user: User): Promise<User> {
         try {
-            const conn = await client.connect();
+            const connection = await client.connect();
             const sql = 'INSERT INTO users (firstName, lastName, username, password_digest) VALUES($1, $2, $3, $4) RETURNING *';
           
             const hash = bcrypt.hashSync(user.password + pepper, parseInt(saltRounds as string));
     
-            const result = await conn.query(sql, [user.firstName, user.lastName, user.username, hash]);
+            const result = await connection.query(sql, [user.firstName, user.lastName, user.username, hash]);
             const newUser = result.rows[0];
     
-            conn.release();
+            connection.release();
             return newUser;
 
-        } catch(err) {
-          throw new Error(`unable create user (${user.username}): ${err}`)
+        } catch(error) {
+          throw new Error(`unable create user (${user.username}): ${error}`);
         } 
       }
+
+    async authenticate(username: string, password: string): Promise<User | null> {
+      try {
+        const connection = await client.connect();
+        const sql = 'SELECT password_digest FROM users WHERE username=($1)';
+    
+        const result = await connection.query(sql, [username]);
+    
+        if (result.rows.length) {
+    
+          const user = result.rows[0];
+    
+          if (bcrypt.compareSync(password+pepper, user.password_digest)) {
+            return user;
+          }
+        }
+    
+        return null;
+
+      } catch(error) {
+        throw new Error(`Can't authenticate user: ${error}`);
+      } 
+    }
 }
