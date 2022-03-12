@@ -1,22 +1,27 @@
 import { User, UserStore } from '../models/user';
 import app from '../server';
 import supertest from 'supertest';
+import jwt from 'jsonwebtoken';
 
 const userStore = new UserStore();
 
 const request = supertest(app);
 
+let authToken: unknown;
+let adminResponse: User;
+
 describe("Users tests", () => {
-    
+
     describe("User CRUD operations tests", () => {
         it('Should insert a new user record into database', async () => {
-            const user: User = {
+            const admin: User = {
                 firstName: 'ahmed',
                 lastName: 'abdelaal',
                 password: '123456'
             };
-            const result = userStore.create(user);
-            expect((await result).id).toBe(1);
+            adminResponse = await userStore.create(admin);
+            
+            expect(adminResponse.id).toBe(1);
         });
      
     });
@@ -39,18 +44,41 @@ describe("Users tests", () => {
     
     })
     
-    
     describe('Users endpoint requests tests', () => {
-        it('should create a new user', async () => {
+        
+        it('should not create a new user without a token', async () => {
             const response = await request
             .post('/users/create')
             .send({
                 firstName: 'Ahmed',
-                lastName: 'Abdelaal',
-                password: 'password'
+                lastName: 'Abdelaal1',
+                password: 'password',
             });
-            expect(response.statusCode).toBe(201);
+            expect(response.statusCode).toBe(401);
         });
+
+        it('should create a new user when a token submitted', async () => {
+            jwt.sign({ user: adminResponse}, process.env.TOKEN_SECRET as string, async (err: unknown, genToken: unknown) => {
+                authToken = await genToken;
+                const response = await request
+                .post('/users/create')
+                .send({
+                    firstName: 'Ahmed',
+                    lastName: 'Abdelaal2',
+                    password: 'password',
+                    token: authToken
+                });
+                expect(response.statusCode).toBe(201);
+            });
+        });
+
+        it('Should login using correct id and password', async () => {
+            const response = await request
+                .post('/users/1')
+                .send({password: '123456'});
+            expect(response.statusCode).toBe(200);
+
+        })
     });
 
 });

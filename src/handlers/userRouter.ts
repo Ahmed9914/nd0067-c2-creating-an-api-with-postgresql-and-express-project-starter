@@ -1,7 +1,8 @@
-import express, { Request, response, Response } from 'express';
+import express, { Request, Response } from 'express';
 import { User, UserStore } from "../models/user";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { verifyToken } from '../middleware';
 
 dotenv.config();
 
@@ -24,12 +25,27 @@ const create = async (request: Request, response: Response) => {
         response.status(400);
         response.json(`Can't create user: ${user}: ${error}`);
     }
-
 }
+
+const authenticate = async (request: Request, response: Response) => {
+    const user: User = {
+      id: parseInt(request.params.id),
+      password: request.body.password,
+    };
+    try {
+        const authUser = await store.authenticate(user.id as number, user.password)
+        var token = jwt.sign({ user: authUser }, process.env.TOKEN_SECRET as string);
+        response.json(token)
+    } catch(error) {
+        response.status(401)
+        response.json({ error })
+    }
+  }
 
 
 const userRoutes = (app: express.Application) => {
-    app.post('/users/create', create);
+    app.post('/users/create', verifyToken, create);
+    app.post('/users/:id', authenticate);
 }
 
 export default userRoutes;
