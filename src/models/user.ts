@@ -9,38 +9,38 @@ const pepper = BCRYPT_PASSWORD;
 const saltRounds: unknown = SALT_ROUNDS;
 
 export type User = {
-    firstName: string;
-    lastName: string;
-    username: string;
-    password_digest?: string;
-    password: string;
+  id?: number,
+  firstName: string;
+  lastName: string;
+  password_digest?: string;
+  password: string;
 };
 
 export class UserStore {    
     async create(user: User): Promise<User> {
         try {
             const connection = await client.connect();
-            const sql = 'INSERT INTO users (firstName, lastName, username, password_digest) VALUES($1, $2, $3, $4) RETURNING *';
+            const sql = 'INSERT INTO users (firstName, lastName, password_digest) VALUES($1, $2, $3) RETURNING *';
           
             const hash = bcrypt.hashSync(user.password + pepper, parseInt(saltRounds as string));
     
-            const result = await connection.query(sql, [user.firstName, user.lastName, user.username, hash]);
+            const result = await connection.query(sql, [user.firstName, user.lastName, hash]);
             const newUser = result.rows[0];
     
             connection.release();
             return newUser;
 
         } catch(error) {
-          throw new Error(`unable create user (${user.username}): ${error}`);
+          throw new Error(`unable create user (${user}): ${error}`);
         } 
       }
 
-    async authenticate(username: string, password: string): Promise<User | null> {
+    async authenticate(id: number, password: string): Promise<User | null> {
       try {
         const connection = await client.connect();
-        const sql = 'SELECT password_digest FROM users WHERE username=($1)';
+        const sql = 'SELECT password_digest FROM users WHERE id=($1)';
     
-        const result = await connection.query(sql, [username]);
+        const result = await connection.query(sql, [id]);
     
         if (result.rows.length) {
     
