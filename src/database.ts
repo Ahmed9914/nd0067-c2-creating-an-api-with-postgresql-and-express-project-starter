@@ -11,7 +11,7 @@ const {
     POSTGRES_PASSWORD
 } = process.env;
 
-// https://stackoverflow.com/questions/65895864/better-testing-express-routes-with-test-db-in-postgresql
+// From https://stackoverflow.com/questions/65895864/better-testing-express-routes-with-test-db-in-postgresql
 const PG_DATABASE = process.env.ENV === "test" ? POSTGRES_TEST_DB : POSTGRES_DB;
 
 export const client = new Pool({
