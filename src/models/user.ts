@@ -10,8 +10,8 @@ const saltRounds: unknown = SALT_ROUNDS;
 
 export type User = {
   id?: number,
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   password_digest?: string;
   password: string;
 };
