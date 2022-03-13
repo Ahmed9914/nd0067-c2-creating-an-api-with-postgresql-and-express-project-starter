@@ -10,8 +10,8 @@ const store = new UserStore();
 
 const create = async (request: Request, response: Response) => {
     const user: User = {
-        firstName: request.body.firstName,
-        lastName: request.body.lastName,
+        firstname: request.body.firstname,
+        lastname: request.body.lastname,
         password: request.body.password
     };
 

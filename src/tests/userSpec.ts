@@ -9,36 +9,34 @@ const request = supertest(app);
 
 let authToken: unknown;
 let adminResponse: User;
+let testedUserId: number | undefined;
 
 describe("Users tests", () => {
 
     describe("User CRUD operations tests", () => {
         it('Should insert a new user record into database', async () => {
             const admin: User = {
-                firstName: 'ahmed',
-                lastName: 'abdelaal',
+                firstname: 'ahmed',
+                lastname: 'abdelaal',
                 password: '123456'
             };
             adminResponse = await userStore.create(admin);
+
+            testedUserId = adminResponse.id as number;
             
-            expect(adminResponse.id).toBe(1);
+            expect(adminResponse.firstname).toBe('ahmed');
         });
      
     });
     
     describe('Authentication tests', () => {
         it('Should block logging on for wrong entered password',async () => {
-            const result = await userStore.authenticate(1, 'password');
-            expect(result).toBeNull();
-        })
-    
-        it('Should block logging on for non existing users',async () => {
-            const result = await userStore.authenticate(2, '123456');
+            const result = await userStore.authenticate(testedUserId as number, 'password');
             expect(result).toBeNull();
         })
     
         it('Should allow logging on for right entered password',async () => {
-            const result = await userStore.authenticate(1, '123456');
+            const result = await userStore.authenticate(testedUserId as number, '123456');
             expect(result).toBeTruthy();
         })
     
@@ -50,8 +48,8 @@ describe("Users tests", () => {
             const response = await request
             .post('/users/create')
             .send({
-                firstName: 'Ahmed',
-                lastName: 'Abdelaal1',
+                firstname: 'Ahmed',
+                lastname: 'Abdelaal1',
                 password: 'password',
             });
             expect(response.statusCode).toBe(401);
@@ -63,8 +61,8 @@ describe("Users tests", () => {
                 const response = await request
                 .post('/users/create')
                 .send({
-                    firstName: 'Ahmed',
-                    lastName: 'Abdelaal2',
+                    firstname: 'Ahmed',
+                    lastname: 'Abdelaal2',
                     password: 'password',
                     token: authToken
                 });
