@@ -28,8 +28,6 @@ export class UserStore {
             const newUser = result.rows[0];
     
             connection.release();
-
-            console.log(newUser);
             return newUser;
 
         } catch(error) {

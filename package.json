@@ -8,7 +8,7 @@
     "start": "node dist/server",
     "build": "npx tsc",
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
-    "test": "db-migrate --env test db:create testDB; db-migrate --env test up; npm run build; ENV=test jasmine; db-migrate --env test down; db-migrate --env test db:drop testDB"
+    "test": "db-migrate --env test db:create testDB; db-migrate --env test up -c 6; npm run build; ENV=test jasmine; db-migrate --env test down -c 6; db-migrate --env test db:drop testDB"
   },
   "author": "Udacity",
   "license": "ISC",
