@@ -32,5 +32,18 @@ export class ProductStore {
         }
     }
 
+     async show(id: string): Promise<Product> {
+        try {
+            const sql = 'SELECT * FROM products WHERE id=($1)';
+            const connection = await client.connect();
+            const result = await connection.query(sql, [id]);
+            connection.release();
+            return result.rows[0];
+        } catch (error) {
+            throw new Error(`Could not find product ${id}. Error: ${error}`)
+        }
+      }
+
+ 
     
 }

@@ -26,6 +26,11 @@ describe("Products tests", () => {
             const newProduct = await productStore.create(product);
             expect(newProduct.id).toBe(1);
         })
+
+        it('Should return a single product by querying its id', async () => {
+            const result = await productStore.show('1');
+            expect(result.name).toBe('shoes');
+        })
     });
 
     describe('products endpoint requests tests', () => {
@@ -53,6 +58,11 @@ describe("Products tests", () => {
                     });
                     expect(response.statusCode).toBe(201);
             });
+        });
+
+        it('request to show with id returns the requested product', async () => {
+            const response = await request.get('/products/1');
+            expect(response.text).toBe('{"id":1,"name":"shoes","price":"20"}');
         });
 
 

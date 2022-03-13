@@ -6,7 +6,7 @@ import { verifyToken } from '../middleware';
 
 dotenv.config();
 
-const store = new UserStore();
+const userStore = new UserStore();
 
 const create = async (request: Request, response: Response) => {
     const user: User = {
@@ -16,7 +16,7 @@ const create = async (request: Request, response: Response) => {
     };
 
     try {
-        const newUser = await store.create(user);
+        const newUser = await userStore.create(user);
         const token = jwt.sign({ user: newUser}, process.env.TOKEN_SECRET as string);
         // console.log(token);
         response.status(201);
@@ -33,7 +33,7 @@ const authenticate = async (request: Request, response: Response) => {
       password: request.body.password,
     };
     try {
-        const authUser = await store.authenticate(user.id as number, user.password)
+        const authUser = await userStore.authenticate(user.id as number, user.password)
         var token = jwt.sign({ user: authUser }, process.env.TOKEN_SECRET as string);
         response.json(token)
     } catch(error) {
