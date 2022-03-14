@@ -4,7 +4,7 @@
 
 1. In the directory contains docker-compose.yml file run `docker-compose up`.
 
-2. After finishing compose, in terminal run: `docker ps` to show all of the docker containers that are running. Then, well find the CONTAINER ID of the container we wish to enter and run `docker exec -it CONTAINER_ID bash -l`.
+2. After finishing compose, in terminal run: `docker ps` to show all of the docker containers that are running. Then, well find the CONTAINER_ID of the container we wish to enter and run `docker exec -it CONTAINER_ID bash -l`.
 
 3. To confirm psql is working, run the following commands in terminal:
 
@@ -50,13 +50,15 @@ Backend on port 3000 and database on port 5432.
 npm install
 ```
 
-2. The command to activate the project
+Noting that db-migrate should be installed globally for running from command line.
+
+2. The command to run development server is:
 
 ```
 npm run start-dev
 ```
 
-3. The command for testing
+3. The command for testing is:
 
 ```
 npm run test
