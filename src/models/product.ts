@@ -43,7 +43,5 @@ export class ProductStore {
             throw new Error(`Could not find product ${id}. Error: ${error}`)
         }
       }
-
- 
     
 }

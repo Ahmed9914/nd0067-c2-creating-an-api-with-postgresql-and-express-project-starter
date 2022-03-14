@@ -24,19 +24,19 @@ describe("Products tests", () => {
             };
 
             const newProduct = await productStore.create(product);
-            expect(newProduct.id).toBe(1);
+            expect(newProduct.id).toEqual(1);
         })
 
         it('Should return a single product by querying its id', async () => {
             const result = await productStore.show('1');
-            expect(result.name).toBe('shoes');
+            expect(result.name).toEqual('shoes');
         })
     });
 
     describe('products endpoint requests tests', () => {
         it('request to index returns created products', async () => {
             const response = await request.get('/products');
-            expect(response.text).toBe('[{"id":1,"name":"shoes","price":"20"}]');
+            expect(response.text).toEqual('[{"id":1,"name":"shoes","price":"20"}]');
         });
 
         it('should create a new product if a jwt token submitted', async () => {
@@ -56,13 +56,13 @@ describe("Products tests", () => {
                         price: 10,
                         token: authToken
                     });
-                    expect(response.statusCode).toBe(201);
+                    expect(response.statusCode).toEqual(201);
             });
         });
 
         it('request to show with id returns the requested product', async () => {
             const response = await request.get('/products/1');
-            expect(response.text).toBe('{"id":1,"name":"shoes","price":"20"}');
+            expect(response.text).toEqual('{"id":1,"name":"shoes","price":"20"}');
         });
 
 

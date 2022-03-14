@@ -24,8 +24,19 @@ describe("Users tests", () => {
 
             testedUserId = adminResponse.id as number;
             
-            expect(adminResponse.firstname).toBe('ahmed');
+            expect(adminResponse.firstname).toEqual('ahmed');
         });
+
+        it('Should return a list of all users confirming by counting the inserted 2 users (1 in product and 1 here',
+        async () => {
+            const result = await userStore.index();
+            expect(result.length).toEqual(2);
+        });
+
+        it('Should return a single user by querying its id', async () => {
+            const result = await userStore.show('2');
+            expect(result.firstname).toBe('ahmed');
+        })
      
     });
     
@@ -52,7 +63,7 @@ describe("Users tests", () => {
                 lastname: 'Abdelaal1',
                 password: 'password',
             });
-            expect(response.statusCode).toBe(401);
+            expect(response.statusCode).toEqual(401);
         });
 
         it('should create a new user when a token submitted', async () => {
@@ -66,7 +77,20 @@ describe("Users tests", () => {
                     password: 'password',
                     token: authToken
                 });
-                expect(response.statusCode).toBe(201);
+                expect(response.statusCode).toEqual(201);
+            });
+        });
+
+        it('should not allow to show all users without a token submitted', async () => {
+            const response = await request.get('/users');
+            expect(response.statusCode).toEqual(401);
+        });
+
+        it('should allow to show all when a token submitted', async () => {
+            jwt.sign({ user: adminResponse}, process.env.TOKEN_SECRET as string, async (err: unknown, genToken: unknown) => {
+                authToken = await genToken;
+                const response = await request.get(`/users?token=${authToken}`);
+                expect(response.statusCode).toEqual(200);
             });
         });
 
@@ -74,7 +98,7 @@ describe("Users tests", () => {
             const response = await request
                 .post('/users/1')
                 .send({password: '123456'});
-            expect(response.statusCode).toBe(200);
+            expect(response.statusCode).toEqual(200);
 
         })
     });

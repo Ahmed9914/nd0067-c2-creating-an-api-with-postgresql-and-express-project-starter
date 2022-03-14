@@ -40,12 +40,31 @@ const authenticate = async (request: Request, response: Response) => {
         response.status(401)
         response.json({ error })
     }
-  }
+}
+
+const index = async (_request: Request, response: Response) => {
+    const users = await userStore.index();
+    response.json(users);
+}
+
+const show = async (request: Request, response: Response) => {
+    try {
+        const user = await userStore.show(request.params.id);
+        response.json(user);
+    } catch (error) {
+        response.status(400);
+        response.json(error);
+    }
+    
+ }
+
 
 
 const userRoutes = (app: express.Application) => {
     app.post('/users/create', verifyToken, create);
     app.post('/users/:id', authenticate);
+    app.get('/users', verifyToken, index);
+    app.get('/users/:id', verifyToken, show);
 }
 
 export default userRoutes;
