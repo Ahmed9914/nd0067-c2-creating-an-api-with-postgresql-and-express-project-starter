@@ -61,7 +61,7 @@ describe("Users tests", () => {
             .send({
                 firstname: 'Ahmed',
                 lastname: 'Abdelaal1',
-                password: 'password',
+                password: 'password'
             });
             expect(response.statusCode).toEqual(401);
         });

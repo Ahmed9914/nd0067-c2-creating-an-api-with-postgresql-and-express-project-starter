@@ -4,6 +4,22 @@ import { Order, OrderStore } from "../models/order";
 
 const orderStore = new OrderStore();
 
+const createOrder = async (request: Request, response: Response) => {
+    try {
+        const order: Order = {
+            status_order: request.body.status_order,
+            user_id: request.body.user_id
+        };
+        const newOrder = await orderStore.createOrder(order);
+        response.status(201);
+        response.json(newOrder);
+    } catch(error) {
+        response.status(400);
+        response.json(error);
+    }
+}
+
+
 const addProduct = async (_request: Request, response: Response) => {
     const orderId: string = _request.params.id;
     const productId: string = _request.body.productId;
@@ -12,6 +28,7 @@ const addProduct = async (_request: Request, response: Response) => {
     try {
         const addedProduct = await orderStore.addProduct(quantity, orderId, productId);
         response.json(addedProduct);
+        response.status(201);
     } catch(err) {
            response.status(400);
            response.json(err);
@@ -49,8 +66,9 @@ const userActiveOrders = async (_request: Request, response: Response) => {
 const orderRoutes = (app: express.Application) => {
     app.get('/orders', ordersIndex);
     app.get('/orders/:id', showOrder);
-    app.post('/orders', verifyToken, addProduct);
     app.get('/users/:id/orders', verifyToken, userActiveOrders);
+    app.post('/orders', verifyToken, createOrder);
+    app.post('/orders/:id', verifyToken, addProduct);
 }
 
 export default orderRoutes;

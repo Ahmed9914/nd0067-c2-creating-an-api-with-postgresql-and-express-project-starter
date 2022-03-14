@@ -1,4 +1,3 @@
-import { Product, ProductStore } from "../models/product";
 import { User, UserStore } from "../models/user";
 import { Order, OrderStore } from "../models/order";
 import supertest from 'supertest';
@@ -6,7 +5,6 @@ import app from '../server';
 import jwt from 'jsonwebtoken';
 
 const orderStore = new OrderStore();
-const productStore = new ProductStore();
 const userStore = new UserStore();
 
 let orderCreatorResponse: User;
@@ -75,9 +73,34 @@ describe("Orders tests", () => {
                 expect(JSON.parse(response.text).length).toEqual(1);
             });
             
-        })
+        });
 
+        it('should create a new order if a jwt token submitted', async () => {
+            jwt.sign({ user: orderCreatorResponse}, process.env.TOKEN_SECRET as string, async (_err: unknown, genToken: unknown) => {
+                const authToken = await genToken;
+                const response = await request
+                .post('/orders')
+                .send({
+                    status_order: "inactive",
+                    user_id: orderCreatorResponse.id?.toString() as string,
+                    token: authToken
+                });
+                expect(response.statusCode).toEqual(201);
+            });
+        });
 
-    });
-
+        it('should add product to a given order', async () => {
+            jwt.sign({ user: orderCreatorResponse}, process.env.TOKEN_SECRET as string, async (_err: unknown, genToken: unknown) => {
+                const authToken = await genToken;
+                const response = await request
+                .post('/orders/1')
+                .send({
+                    productId: "2",
+                    quantity: 3,
+                    token: authToken
+                });
+                expect(response.statusCode).toEqual(201);
+            });
+        });
+    })
 });

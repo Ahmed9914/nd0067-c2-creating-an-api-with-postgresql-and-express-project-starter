@@ -20,6 +20,99 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Current Order by user (args: user id)[token required]
 - [OPTIONAL] Completed Orders by user (args: user id)[token required]
 
+## RESTful routes
+#### Products
+```
+GET http:/localhost:3000/products
+
+POST http:/localhost:3000/products
+
+with body:
+{
+  name: 'food',
+  price: 10,
+  token: authToken
+}
+
+GET http:/localhost:3000/products/:id
+```
+
+#### User
+```
+POST http:/localhost:3000/users/create
+with body:
+{
+    firstname: 'Ahmed',
+    lastname: 'Abdelaal1',
+    password: 'password',
+    token: authToken
+}
+
+POST http:/localhost:3000/users/:id
+with body:
+{password: '123456'}
+
+GET http:/localhost:3000/users?token=authToken
+
+GET http:/localhost:3000//users/:id?token=authToken
+```
+
+#### Orders
+```
+GET http:/localhost:3000/orders
+
+GET http:/localhost:3000/orders/:id
+
+GET http:/localhost:3000/users/:id/orders?token=authToken
+
+POST http:/localhost:3000/orders/:id
+with body:
+{
+    productId: "2",
+    quantity: 3,
+    token: authToken
+}
+    
+```
+
+## Database schema:
+#### Product
+```
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    price NUMERIC(2)
+);
+```
+
+#### User
+```
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    firstname VARCHAR(100),
+    lastname VARCHAR(100), 
+    password_digest VARCHAR
+);
+```
+
+#### Orders
+```
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    order_status VARCHAR(15),
+    user_id bigint REFERENCES users(id)
+);
+```
+
+```
+CREATE TABLE order_products (
+    id SERIAL PRIMARY KEY,
+    quantity integer,
+    order_id bigint REFERENCES orders(id),
+    product_id bigint REFERENCES products(id)
+);
+```
+
 ## Data Shapes
 #### Product
 -  id
