@@ -1,7 +1,7 @@
 import { Product, ProductStore } from "../models/product";
+import { User, UserStore } from "../models/user";
 import supertest from 'supertest';
 import app from '../server';
-import { User, UserStore } from "../models/user";
 import jwt from 'jsonwebtoken';
 
 const productStore = new ProductStore();
@@ -41,13 +41,13 @@ describe("Products tests", () => {
 
         it('should create a new product if a jwt token submitted', async () => {
                 const productCreator: User = {
-                    firstname: 'create',
-                    lastname: 'products',
+                    firstname: 'product',
+                    lastname: 'creator',
                     password: '123456'
                 };
                 const productCreatorResponse = await userStore.create(productCreator);
                 
-                jwt.sign({ user: productCreatorResponse}, process.env.TOKEN_SECRET as string, async (err: unknown, genToken: unknown) => {
+                jwt.sign({ user: productCreatorResponse}, process.env.TOKEN_SECRET as string, async (_err: unknown, genToken: unknown) => {
                     const authToken = await genToken;
                     const response = await request
                     .post('/products')

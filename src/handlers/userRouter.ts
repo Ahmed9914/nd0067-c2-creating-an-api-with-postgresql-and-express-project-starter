@@ -8,7 +8,7 @@ dotenv.config();
 
 const userStore = new UserStore();
 
-const create = async (request: Request, response: Response) => {
+const createUser = async (request: Request, response: Response) => {
     const user: User = {
         firstname: request.body.firstname,
         lastname: request.body.lastname,
@@ -42,12 +42,12 @@ const authenticate = async (request: Request, response: Response) => {
     }
 }
 
-const index = async (_request: Request, response: Response) => {
+const usersIndex = async (_request: Request, response: Response) => {
     const users = await userStore.index();
     response.json(users);
 }
 
-const show = async (request: Request, response: Response) => {
+const showUser = async (request: Request, response: Response) => {
     try {
         const user = await userStore.show(request.params.id);
         response.json(user);
@@ -61,10 +61,10 @@ const show = async (request: Request, response: Response) => {
 
 
 const userRoutes = (app: express.Application) => {
-    app.post('/users/create', verifyToken, create);
+    app.post('/users/create', verifyToken, createUser);
     app.post('/users/:id', authenticate);
-    app.get('/users', verifyToken, index);
-    app.get('/users/:id', verifyToken, show);
+    app.get('/users', verifyToken, usersIndex);
+    app.get('/users/:id', verifyToken, showUser);
 }
 
 export default userRoutes;

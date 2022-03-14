@@ -4,12 +4,12 @@ import { Product, ProductStore } from "../models/product";
 
 const productStore = new ProductStore();
 
-const index = async (_request: Request, response: Response) => {
+const productsIndex = async (_request: Request, response: Response) => {
     const products = await productStore.index();
     response.json(products);
 }
 
-const create = async (request: Request, response: Response) => {
+const createProduct = async (request: Request, response: Response) => {
     try {
         const product: Product = {
             name: request.body.name,
@@ -25,7 +25,7 @@ const create = async (request: Request, response: Response) => {
 
 }
 
-const show = async (request: Request, response: Response) => {
+const showProduct = async (request: Request, response: Response) => {
     try {
         const product = await productStore.show(request.params.id);
         response.json(product);
@@ -38,9 +38,9 @@ const show = async (request: Request, response: Response) => {
  
 
 const productRoutes = (app: express.Application) => {
-    app.get('/products', index);
-    app.post('/products', verifyToken, create);
-    app.get('/products/:id', show);
+    app.get('/products', productsIndex);
+    app.post('/products', verifyToken, createProduct);
+    app.get('/products/:id', showProduct);
 }
 
 export default productRoutes;

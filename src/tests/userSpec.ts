@@ -27,14 +27,14 @@ describe("Users tests", () => {
             expect(adminResponse.firstname).toEqual('ahmed');
         });
 
-        it('Should return a list of all users confirming by counting the inserted 2 users (1 in product and 1 here',
+        it('Should return a list of all users',
         async () => {
             const result = await userStore.index();
-            expect(result.length).toEqual(2);
+            expect(result.length).toEqual(1);
         });
 
         it('Should return a single user by querying its id', async () => {
-            const result = await userStore.show('2');
+            const result = await userStore.show('1');
             expect(result.firstname).toBe('ahmed');
         })
      
@@ -67,7 +67,7 @@ describe("Users tests", () => {
         });
 
         it('should create a new user when a token submitted', async () => {
-            jwt.sign({ user: adminResponse}, process.env.TOKEN_SECRET as string, async (err: unknown, genToken: unknown) => {
+            jwt.sign({ user: adminResponse}, process.env.TOKEN_SECRET as string, async (_err: unknown, genToken: unknown) => {
                 authToken = await genToken;
                 const response = await request
                 .post('/users/create')
@@ -87,7 +87,7 @@ describe("Users tests", () => {
         });
 
         it('should allow to show all when a token submitted', async () => {
-            jwt.sign({ user: adminResponse}, process.env.TOKEN_SECRET as string, async (err: unknown, genToken: unknown) => {
+            jwt.sign({ user: adminResponse}, process.env.TOKEN_SECRET as string, async (_err: unknown, genToken: unknown) => {
                 authToken = await genToken;
                 const response = await request.get(`/users?token=${authToken}`);
                 expect(response.statusCode).toEqual(200);
