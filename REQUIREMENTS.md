@@ -44,8 +44,7 @@ with body:
 {
     firstname: 'Ahmed',
     lastname: 'Abdelaal1',
-    password: 'password',
-    token: authToken
+    password: 'password'
 }
 
 POST http:/localhost:3000/users/:id

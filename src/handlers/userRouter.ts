@@ -61,7 +61,7 @@ const showUser = async (request: Request, response: Response) => {
 
 
 const userRoutes = (app: express.Application) => {
-    app.post('/users/create', verifyToken, createUser);
+    app.post('/users/create', createUser);
     app.post('/users/:id', authenticate);
     app.get('/users', verifyToken, usersIndex);
     app.get('/users/:id', verifyToken, showUser);

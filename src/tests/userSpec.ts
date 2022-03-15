@@ -55,7 +55,7 @@ describe("Users tests", () => {
     
     describe('Users endpoint requests tests', () => {
         
-        it('should not create a new user without a token', async () => {
+        it('should create a new user', async () => {
             const response = await request
             .post('/users/create')
             .send({
@@ -63,22 +63,7 @@ describe("Users tests", () => {
                 lastname: 'Abdelaal1',
                 password: 'password'
             });
-            expect(response.statusCode).toEqual(401);
-        });
-
-        it('should create a new user when a token submitted', async () => {
-            jwt.sign({ user: adminResponse}, process.env.TOKEN_SECRET as string, async (_err: unknown, genToken: unknown) => {
-                authToken = await genToken;
-                const response = await request
-                .post('/users/create')
-                .send({
-                    firstname: 'Ahmed',
-                    lastname: 'Abdelaal2',
-                    password: 'password',
-                    token: authToken
-                });
-                expect(response.statusCode).toEqual(201);
-            });
+            expect(response.statusCode).toEqual(201);
         });
 
         it('should not allow to show all users without a token submitted', async () => {
