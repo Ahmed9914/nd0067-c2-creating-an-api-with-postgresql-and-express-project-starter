@@ -58,9 +58,9 @@ GET http:/localhost:3000//users/:id?token=authToken
 
 #### Orders
 ```
-GET http:/localhost:3000/orders
+GET http:/localhost:3000/orders?token=authToken
 
-GET http:/localhost:3000/orders/:id
+GET http:/localhost:3000/orders/:id?token=authToken
 
 GET http:/localhost:3000/users/:id/orders?token=authToken
 

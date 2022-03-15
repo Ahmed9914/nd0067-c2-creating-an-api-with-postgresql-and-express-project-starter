@@ -57,13 +57,19 @@ describe("Orders tests", () => {
 
     describe('orders endpoint requests tests', () => {
         it('request to index returns created orders (currently one order)', async () => {
-            const response = await request.get('/orders');
-            expect(JSON.parse(response.text).length).toEqual(1);
+            jwt.sign({ user: orderCreatorResponse}, process.env.TOKEN_SECRET as string, async (_err: unknown, genToken: unknown) => {
+                const authToken = await genToken;
+                const response = await request.get(`/orders?token=${authToken}`);
+                expect(JSON.parse(response.text).length).toEqual(1);
+            });
         });
 
         it('request to show with id returns the requested order', async () => {
-            const response = await request.get('/orders/1');
-            expect(JSON.parse(response.text).order_status).toEqual('active');
+            jwt.sign({ user: orderCreatorResponse}, process.env.TOKEN_SECRET as string, async (_err: unknown, genToken: unknown) => {
+                const authToken = await genToken;
+                const response = await request.get(`/orders/1?token=${authToken}`);
+                expect(JSON.parse(response.text).order_status).toEqual('active');
+            });
         });
 
         it('should return active orders of a user', async () => {

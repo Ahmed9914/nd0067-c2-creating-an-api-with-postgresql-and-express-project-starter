@@ -64,8 +64,8 @@ const userActiveOrders = async (_request: Request, response: Response) => {
  
 
 const orderRoutes = (app: express.Application) => {
-    app.get('/orders', ordersIndex);
-    app.get('/orders/:id', showOrder);
+    app.get('/orders', verifyToken, ordersIndex);
+    app.get('/orders/:id', verifyToken, showOrder);
     app.get('/users/:id/orders', verifyToken, userActiveOrders);
     app.post('/orders', verifyToken, createOrder);
     app.post('/orders/:id', verifyToken, addProduct);
